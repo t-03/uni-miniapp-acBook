@@ -1,0 +1,22 @@
+{
+  "pages": [
+    {
+      "path": "pages/index/index"
+    },
+    {
+      "path": "pages/game/game"
+    },
+    {
+      "path": "pages/guest/guest"
+    },
+    {
+      "path": "pages/login/login"
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "#fff",
+    "navigationBarTitleText": "XXXX-《重返帝国》—腾讯游戏",
+    "navigationBarBackgroundColor": "#270C01",
+    "backgroundColor": "#270C01"
+  }
+}
