@@ -1,10 +1,7 @@
 <template>
   <div class="page">
     首页
-    <button
-      class="btn-to-treasure"
-      @click="toGame"
-    />
+    <button class="btn-to-treasure" @click="toGame" />
   </div>
 </template>
 <script>
@@ -15,52 +12,43 @@ export default {
   name: "Index",
   data() {
     return {
-      rewardList:rewardList,
+      rewardList: rewardList
     };
   },
   computed: {
     ...mapGetters(["token"]),
     ...mapGetters(["userinfo"])
   },
-  watch: {
-
-  },
+  watch: {},
   onLoad() {
     var that = this;
-    if(!that.token){
+    if (!that.token) {
       that.$doWXLogin();
     }
   },
   onShow() {
     var that = this;
-    wx.setSite({
-      pageType:"home",
-      pageName:"首页"
-    });
-    if(that.token){
+    if (that.token) {
       that.init(); //页面数据初始化
     }
-    // 页面PV上报 actid需要找开发要
-    that.$milo.checkLogin().then((res) => {
-      that.$milo.easReportPV({  e_code: "", actid: 439280, acttype: "ams" }); 
-    });
   },
   methods: {
-    init(){
-      var that=this;
-      getData("829629").then((res)=>{
-        if(res.iRet==0){
-          if(res.sOutValue1==1){  //获取用户预约状态
-            that.isCompleteOrder=1;
+    init() {
+      var that = this;
+      getData("829629").then(res => {
+        if (res.iRet == 0) {
+          if (res.sOutValue1 == 1) {
+            //获取用户预约状态
+            that.isCompleteOrder = 1;
           }
         }
       });
     },
-    toGame(){
-      var that=this;
-      if(!that.token){
+    toGame() {
+      var that = this;
+      if (!that.token) {
         that.$doWXLogin();
-      }else{
+      } else {
         this.$nTo("../game/game");
       }
     }
@@ -69,24 +57,26 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .page{
+.page {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background: url(https://game.gtimg.cn/images/wslg/cp/a20211221dgqyj/bg1.jpg)
+    no-repeat center top/100% 100%;
+  box-sizing: border-box;
+  padding-top: 20upx;
+  overflow: hidden;
+  font-size: 24upx;
+  color: #fff;
+  .btn-to-treasure {
+    width: 439upx;
+    height: 114upx;
+    display: block;
+    margin: 0 auto;
     position: relative;
-    width: 100%;
-    min-height: 100vh;
-    background: url(https://game.gtimg.cn/images/wslg/cp/a20211221dgqyj/bg1.jpg) no-repeat center top/100% 100%;
-    box-sizing: border-box;
-    padding-top: 20upx;
-    overflow: hidden;
-    font-size: 24upx;
-    color: #fff;
-    .btn-to-treasure{
-      width: 439upx;
-      height: 114upx;
-      display: block;
-      margin: 0 auto;
-      position: relative;
-      background: url(https://game.gtimg.cn/images/wslg/cp/a20211221dgqyj/btn-to-treasure.png) no-repeat center/100%;
-      margin: -40upx auto 0;
-    }
+    background: url(https://game.gtimg.cn/images/wslg/cp/a20211221dgqyj/btn-to-treasure.png)
+      no-repeat center/100%;
+    margin: -40upx auto 0;
   }
+}
 </style>
