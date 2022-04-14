@@ -2,19 +2,19 @@
 const path = require("path");
 const CompressionWebpackPlugin = require("compression-webpack-plugin");
 
-function resolve(dir) {
+function resolve (dir) {
   return path.join(__dirname, dir);
 }
 
-const name = "小账簿";
+const name = "XXXX-《重返帝国》—腾讯游戏";
 
 module.exports = {
   configureWebpack: {
     name: name,
     resolve: {
       alias: {
-        "@": resolve("src"),
-      },
+        "@": resolve("src")
+      }
     },
     plugins: [
       new CompressionWebpackPlugin({
@@ -24,9 +24,9 @@ module.exports = {
         threshold: 10240, // 仅处理大于此大小的文件。以字节为单位。
         minRatio: 0.8,
       }),
-    ],
+    ]
   },
-  chainWebpack(config) {
+  chainWebpack (config) {
     // 它可以提高第一屏的速度，建议打开预加载
     // config.plugins.delete('preload');
 
@@ -47,5 +47,5 @@ module.exports = {
       ];
       return args;
     });
-  },
+  }
 };

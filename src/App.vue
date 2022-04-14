@@ -3,23 +3,26 @@ import { mapGetters } from "vuex";
 export default {
   onLaunch: function() {
     // 判断安卓/ios平台
-    var platInfo = uni.getSystemInfoSync();
-    if (platInfo.system.indexOf("Android") != -1) {
-      uni.setStorageSync("sPlatId", 1);
-      uni.setStorageSync("device", 2);
-    } else {
-      uni.setStorageSync("sPlatId", 0);
-      uni.setStorageSync("device", 1);
+    var platInfo=uni.getSystemInfoSync();
+    if(platInfo.system.indexOf("Android")!=-1){
+      uni.setStorageSync("sPlatId",1);
+      uni.setStorageSync("device",2);
+    }else{
+      uni.setStorageSync("sPlatId",0);
+      uni.setStorageSync("device",1);
     }
-    // if(!this.token){
-    //   this.$doWXLogin();
-    // }
+
+    if(!this.token){
+      this.$doWXLogin();
+    }
   },
-  computed: {
+  computed:{
     ...mapGetters(["token"])
   },
-  onShow: function() {},
-  onHide: function() {},
+  onShow: function() {
+  },
+  onHide: function() {
+  },
   onError: function() {
     console.log("当 uni-app 报错时触发");
   },
@@ -32,6 +35,6 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang='scss'>
 @import "styles/index.scss";
 </style>

@@ -2,9 +2,7 @@
   <view class="page">
     <view class="inner">
       <view class="image">
-        <image
-          src="https://game.gtimg.cn/images/wslg/cp/a20211221dgqyj/share.png"
-        />
+        <image src="https://game.gtimg.cn/images/wslg/cp/a20211221dgqyj/share.png" />
       </view>
       <view class="text">
         <view class="title">
@@ -22,7 +20,10 @@
       >
         立即登录
       </button>
-      <button class="btn no-login" @click="onRefuse">
+      <button
+        class="btn no-login"
+        @click="onRefuse"
+      >
         暂不登录
       </button>
     </view>
@@ -40,7 +41,7 @@ export default {
       project_name: PROJECT_NAME,
       options: {},
       canIGetUserProfile: false,
-      userInfoObj: {}
+      userInfoObj:{}
     };
   },
 
@@ -54,48 +55,41 @@ export default {
   },
   onShow() {
     wx.setSite({
-      pageType: "login",
-      pageName: "登录页"
+      pageType:"login",
+      pageName:"登录页"
     });
   },
   methods: {
     // 提示更新微信版本
-    showUploadModal() {
-      this.$mdl(
-        "提示",
-        "您当前的微信版本过低，请先返回微信更新微信版本",
-        this.onRefuse(),
-        false
-      );
+    showUploadModal () {
+      this.$mdl("提示", "您当前的微信版本过低，请先返回微信更新微信版本",this.onRefuse(),false);
     },
-    bindGetUserInfo() {
-      wx.PTTSendClick("btn", "login", "登录");
+    bindGetUserInfo(){
+      wx.PTTSendClick("btn","login","登录");
       var that = this;
       uni.getUserProfile({
         desc: "授权登录",
-        success: res => {
-          that.$store.commit("users/SET_USER_INFO", res.userInfo);
+        success: (res) => {
+          that.$store.commit("users/SET_USER_INFO",res.userInfo);
           that.login();
         },
-        fail: res => {
-          console.log("授权失败", res);
+        fail: (res) => {
+          console.log(res);
         }
       });
     },
     /* 授权登录 */
-    login() {
-      var that = this;
-      console.log("授权", that.token);
-      if (!that.token) {
-        console.log("取反授权", !that.token);
-        that.$milo.checkLogin().then(res => {
-          that.$milo.easReportPV({ e_code: "", actid: 439280, acttype: "ams" });
-          if (res.openid) {
-            wx.saveOpenid(res.openid);
-            that.$store.commit("users/SET_TOKEN", res.ieg_ams_token);
-            that.onNavigateBack(1);
-          } else {
-            this.$mdl("提示", "登录授权失败，请重试", this.onRefuse(), false);
+    login(){
+      var that=this;
+      if(!that.token){
+        that.$milo.checkLogin().then((res) => {
+          that.$milo.easReportPV({  e_code: "", actid: 439280, acttype: "ams" }); 
+          if(res.openid){
+             wx.saveOpenid(res.openid);
+             that.$store.commit("users/SET_TOKEN",res.ieg_ams_token);
+             that.onNavigateBack(1);
+          }else{
+            this.$mdl("提示", "登录授权失败，请重试",this.onRefuse(),false);
           }
         });
       }
@@ -110,7 +104,7 @@ export default {
     },
     /**拒绝授权登录 */
     onRefuse() {
-      wx.PTTSendClick("btn", "refuseLogin", "拒绝授权");
+      wx.PTTSendClick("btn","refuseLogin","拒绝授权");
       this.onNavigateBack(this.options.delta);
     }
   }
@@ -118,12 +112,11 @@ export default {
 </script>
 
 <style scoped>
-.page {
+.page{
   position: relative;
   width: 100%;
   min-height: 100vh;
-  background: url(https://game.gtimg.cn/images/wslg/cp/a20211221dgqyj/bg1.jpg)
-    no-repeat center top/100% 100%;
+  background: url(https://game.gtimg.cn/images/wslg/cp/a20211221dgqyj/bg1.jpg) no-repeat center top/100% 100%;
   box-sizing: border-box;
   overflow: hidden;
 }
@@ -139,7 +132,7 @@ export default {
 
 .text {
   margin: 20rpx auto 0;
-  width: 680rpx;
+  width:680rpx;
   text-align: center;
 }
 
@@ -148,13 +141,13 @@ export default {
   font-size: 30rpx;
   line-height: 1.5;
   /* color: #333333; */
-  color: #9f4a25;
+  color: #9F4A25;
 }
 
 .con {
   font-size: 28rpx;
   /* color: #666666; */
-  color: #9f4a25;
+  color: #9F4A25;
   text-indent: 40rpx;
 }
 
@@ -169,7 +162,7 @@ export default {
   text-align: center;
   color: #fff;
   /* background: #04c161; */
-  background: #d16932;
+  background: #D16932;
   border: none;
   margin: 40upx auto;
 }
