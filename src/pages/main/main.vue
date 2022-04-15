@@ -9,9 +9,9 @@
     </view>
     <view v-if="!hasLogin" class="hello">
       <view class="title">
-        您好 游客。
+        您好aaaaaaaaaaaaaaaaa，游客。
       </view>
-      <view class="ul">
+      <view class="ul" @click="showInfo">
         <view>这是 uni-app 带登录模板的示例App首页。</view>
         <view>在 “我的” 中点击 “登录” 可以 “登录您的账户”</view>
       </view>
@@ -26,6 +26,7 @@ import { univerifyLogin } from "@/common/univerify.js";
 export default {
   computed: mapState(["forcedLogin", "hasLogin", "userName"]),
   onLoad() {
+    console.log("加载");
     const loginType = uni.getStorageSync("login_type");
     if (loginType === "local") {
       this.login(uni.getStorageSync("username"));
@@ -33,12 +34,25 @@ export default {
     }
     let uniIdToken = uni.getStorageSync("uni_id_token");
   },
+  onShow() {
+    console.log("显示");
+    uni.onUserCaptureScreen(function() {
+      console.log("用户截屏了");
+    });
+  },
   mounted() {
     let menuButtonInfo = uni.getMenuButtonBoundingClientRect();
     console.log("----", menuButtonInfo);
   },
   methods: {
     ...mapMutations(["login"]),
+    showInfo() {
+      console.log("--1--");
+      uni.showToast({
+        title: "标题",
+        duration: 2000
+      });
+    },
     guideToLogin() {
       uni.showModal({
         title: "未登录",
