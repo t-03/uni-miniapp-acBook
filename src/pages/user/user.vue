@@ -1,175 +1,87 @@
 <template>
-  <view class="">
-    <view class="center">
-      <view
-        class="logo"
-        @click="bindLogin"
-        :hover-class="!hasLogin ? 'logo-hover' : ''"
-      >
-        <image class="logo-img" :src="avatarUrl"></image>
-        <view class="logo-title">
-          <text class="uer-name"
-            >Hi，{{ hasLogin ? userName : "您未登录" }}</text
-          >
-          <text class="go-login navigat-arrow" v-if="!hasLogin">&#xe65e;</text>
-        </view>
-      </view>
-      <view class="center-list">
-        <view
-          class="center-list-item border-bottom"
-          v-show="hasLogin && hasPwd"
-          @click="goto"
+  <view class="container">
+    <img class="bill-bg" src="../../static/img/user-bg.png" alt="背景Bill" />
+    <div class="module1 module">
+      <div class="info">
+        <div class="avatar">
+          <img src="../../static/img/avatar.jpg" alt="头像" />
+        </div>
+        <div class="user-info">
+          <div class="user-name">PAC-MAN</div>
+          <hr class="line" />
+          <div class="user-mount">
+            <div class="mount-icon"></div>
+            <div class="mount-num">
+              <span>2458</span>
+              ￥
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="module2 module">
+      <div class="title">
+        <div class="title-left">
+          <div class="title-icon"></div>
+          <div class="title-text">数据分析</div>
+        </div>
+        <div class="title-year">2022</div>
+      </div>
+      <hr class="line" />
+    </div>
+    <div class="module3 module">
+      <div class="title">
+        <div class="title-left">
+          <div class="title-icon"></div>
+          <div class="title-text">最常合作</div>
+        </div>
+        <div class="title-year">FRIENDS</div>
+      </div>
+      <hr class="line" />
+      <div class="friend">
+        <div
+          v-for="(item, index) in friendList"
+          :key="index"
+          class="friend-item"
         >
-          <text class="list-icon">&#xe60f;</text>
-          <text class="list-text">修改密码</text>
-          <text class="navigat-arrow">&#xe65e;</text>
-        </view>
-        <!-- #ifdef APP-PLUS -->
-        <view
-          v-if="hasLogin"
-          class="center-list-item border-bottom"
-          @click="toInvite"
-        >
-          <text class="list-icon">&#xe65f;</text>
-          <text class="list-text">邀请好友</text>
-          <text class="navigat-arrow">&#xe65e;</text>
-        </view>
-        <!-- #endif -->
-        <view class="center-list-item">
-          <text class="list-icon">&#xe639;</text>
-          <text class="list-text">新消息通知</text>
-          <text class="navigat-arrow">&#xe65e;</text>
-        </view>
-      </view>
-      <view class="center-list">
-        <view class="center-list-item border-bottom">
-          <text class="list-icon">&#xe60b;</text>
-          <text class="list-text">帮助与反馈1</text>
-          <text class="navigat-arrow">&#xe65e;</text>
-        </view>
-        <view class="center-list-item">
-          <text class="list-icon">&#xe65f;</text>
-          <text class="list-text">服务条款及隐私</text>
-          <text class="navigat-arrow">&#xe65e;</text>
-        </view>
-      </view>
-      <view class="center-list" @click="showInfo">
-        <view class="center-list-item">
-          <text class="list-icon">&#xe614;</text>
-          <text class="list-text">关于应用</text>
-          <text class="navigat-arrow">&#xe65e;</text>
-        </view>
-      </view>
-      <view class="btn-row">
-        <button
-          v-if="hasLogin"
-          class="primary"
-          type="primary"
-          :loading="logoutBtnLoading"
-          @tap="bindLogout"
-        >
-          退出登录！
-        </button>
-      </view>
-    </view>
+          <div class="friend-avatar">
+            <img :src="item.avatar" alt="头像" />
+          </div>
+          <div class="friend-info">
+            <div class="friend-name">{{ item.name }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="module4 module"></div>
+    <div class="module4 module"></div>
   </view>
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
-import { univerifyLogin } from "@/common/univerify.js";
-
 export default {
   data() {
     return {
-      avatarUrl: "../../static/img/logo.png",
-      inviteUrl: "",
-      logoutBtnLoading: false,
-      hasPwd: uni.getStorageSync("uni_id_has_pwd")
+      friendList: [
+        {
+          name: "我的名字七个字",
+          avatar: "../../static/img/user1.jpg"
+        },
+        {
+          name: "我的名字七个字",
+          avatar: "../../static/img/user2.jpg"
+        },
+        {
+          name: "我的名字七个字",
+          avatar: "../../static/img/user3.jpg"
+        }
+      ]
     };
   },
-  computed: {
-    ...mapState(["hasLogin", "forcedLogin", "userName"])
-  },
-  mounted() {
-    console.log("----");
-  },
-  onShow() {
-    console.log("显示");
-    uni.onUserCaptureScreen(function() {
-      console.log("用户截屏了");
-    });
-  },
+  computed: {},
+  mounted() {},
+  onShow() {},
   methods: {
-    ...mapMutations(["logout"]),
-    showInfo() {
-      console.log("--1--");
-    },
-    bindLogin() {
-      console.log("--点击登录--");
-      if (!this.hasLogin) {
-        univerifyLogin().catch(err => {
-          if (err === false) return;
-
-          uni.navigateTo({
-            url: "../login/login"
-          });
-        });
-      }
-    },
-    bindLogout() {
-      const loginType = uni.getStorageSync("login_type");
-      if (loginType === "local") {
-        this.logout();
-        if (this.forcedLogin) {
-          uni.reLaunch({
-            url: "../login/login"
-          });
-        }
-        return;
-      }
-      this.logoutBtnLoading = true;
-      uniCloud.callFunction({
-        name: "user-center",
-        data: {
-          action: "logout"
-        },
-        success: e => {
-          console.log("logout success", e);
-
-          if (e.result.code == 0) {
-            this.logout();
-            uni.removeStorageSync("uni_id_token");
-            uni.removeStorageSync("username");
-            uni.removeStorageSync("uni_id_has_pwd");
-            /**
-             * 如果需要强制登录跳转回登录页面
-             */
-            this.inviteUrl = "";
-            if (this.forcedLogin) {
-              uni.reLaunch({
-                url: "../login/login"
-              });
-            }
-          } else {
-            uni.showModal({
-              content: e.result.msg,
-              showCancel: false
-            });
-            console.log("登出失败", e);
-          }
-        },
-        fail: e => {
-          uni.showModal({
-            content: JSON.stringify(e),
-            showCancel: false
-          });
-        },
-        complete: () => {
-          this.logoutBtnLoading = false;
-        }
-      });
-    },
     toInvite() {
       uni.navigateTo({
         url: "/pages/invite/invite"
@@ -184,7 +96,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
 @font-face {
   font-family: texticons;
   font-weight: normal;
@@ -193,115 +105,232 @@ export default {
     format("truetype");
 }
 
-page,
-view {
-  display: flex;
-}
-
-page {
-  background-color: #f8f8f8;
-}
-
-button {
+.container {
   width: 100%;
+  height: 100vh;
+  background-color: #a8ecfb;
+  position: absolute;
+  overflow: scroll;
+}
+.bill-bg {
+  position: fixed;
+  top: 12rpx;
+  width: 100%;
+  height: 94rpx;
+  z-index: 1;
 }
 
-.center {
-  flex-direction: column;
-}
-
-.logo {
-  width: 750rpx;
-  height: 240rpx;
-  padding: 20rpx;
-  box-sizing: border-box;
-  background-color: #0faeff;
-  flex-direction: row;
-  align-items: center;
-}
-
-.logo-hover {
-  opacity: 0.8;
-}
-
-.logo-img {
-  width: 120rpx;
-  height: 120rpx;
-  border-radius: 150rpx;
-}
-
-.logo-title {
-  height: 150rpx;
-  flex: 1;
-  align-items: center;
-  justify-content: space-between;
-  flex-direction: row;
-  margin-left: 20rpx;
-}
-
-.uer-name {
-  height: 60rpx;
-  line-height: 60rpx;
-  color: #ffffff;
-}
-
-.go-login.navigat-arrow {
-  color: #ffffff;
-}
-
-.login-title {
-  height: 150rpx;
-  align-items: self-start;
-  justify-content: center;
-  flex-direction: column;
-  margin-left: 20rpx;
-}
-
-.center-list {
-  background-color: #ffffff;
+.module {
+  margin: 0 auto;
   margin-top: 20rpx;
-  width: 750rpx;
-  flex-direction: column;
+  border-radius: 20rpx;
+  position: relative;
+  z-index: 9;
 }
 
-.center-list-item {
-  height: 90rpx;
-  width: 750rpx;
+.module1 {
+  width: 710rpx;
+  height: 212rpx;
+  margin-top: 31rpx;
+  position: relative;
+  .info {
+    width: 100%;
+    height: 173rpx;
+    margin: 0 auto;
+    position: absolute;
+    bottom: 0;
+    background-color: white;
+    border-radius: 20rpx;
+    display: flex;
+    .avatar {
+      width: 193rpx;
+      height: 193rpx;
+      background-color: #ffffff;
+      box-shadow: 0px 0px 12px 1px rgba(59, 130, 144, 0.19);
+      border-radius: 10px;
+      margin-left: 19rpx;
+      margin-bottom: 19rpx;
+      position: absolute;
+      bottom: 0;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .user-info {
+      margin: 30rpx 21rpx 19rpx 249rpx;
+      .user-name {
+        color: #333333;
+        font-weight: bolder;
+        margin-bottom: 20rpx;
+      }
+      .line {
+        border-top: solid 1px #333333;
+        width: 440rpx;
+        height: 1rpx;
+        opacity: 0.1;
+      }
+      .user-mount {
+        width: 440rpx;
+        height: 60rpx;
+        padding-top: 10rpx;
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        display: table-cell;
+        vertical-align: bottom;
+        .mount-icon {
+          width: 161rpx;
+          height: 35rpx;
+          background: url(../../static/img/ac-mount-tips.png) no-repeat
+            center/100% 100%;
+          position: absolute;
+          bottom: 0;
+        }
+        .mount-num {
+          position: absolute;
+          right: 0;
+          bottom: -5rpx;
+          font-size: 21rpx;
+          color: #68e6fe;
+          text-align: bottom;
+          line-height: 1;
+          span {
+            font-size: 68rpx;
+            font-weight: bolder;
+            line-height: 1;
+          }
+        }
+      }
+    }
+  }
+}
+
+.module2 {
+  width: 710rpx;
+  height: 421rpx;
+  background-color: #ffffff;
+  box-shadow: 0px 0px 12px 1rpx rgba(59, 130, 144, 0.19);
+  padding: 26rpx 19rpx 27rpx 20rpx;
   box-sizing: border-box;
-  flex-direction: row;
-  padding: 0rpx 20rpx;
+  .title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .title-left {
+      display: flex;
+      align-items: center;
+      .title-icon {
+        background: url(../../static/img/icon-static.png) no-repeat center/100%
+          100%;
+        width: 25rpx;
+        height: 25rpx;
+      }
+      .title-text {
+        margin-left: 10rpx;
+        color: #333333;
+        font-size: 26rpx;
+        font-weight: bolder;
+      }
+    }
+    .title-year {
+      font-size: 22rpx;
+      color: #68e6fe;
+    }
+  }
+  .line {
+    width: 673rpx;
+    height: 1rpx;
+    margin-top: 14rpx;
+    border-top: solid 1rpx #333333;
+    opacity: 0.1;
+  }
 }
-
-.border-bottom {
-  border-bottom-width: 1rpx;
-  border-color: #c8c7cc;
-  border-bottom-style: solid;
+.module3 {
+  width: 710rpx;
+  height: 293rpx;
+  background-color: #ffffff;
+  box-shadow: 0px 0px 12px 1rpx rgba(59, 130, 144, 0.19);
+  padding: 26rpx 19rpx 27rpx 20rpx;
+  box-sizing: border-box;
+  .title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .title-left {
+      display: flex;
+      align-items: center;
+      .title-icon {
+        background: url(../../static/img/icon-static.png) no-repeat center/100%
+          100%;
+        width: 25rpx;
+        height: 25rpx;
+      }
+      .title-text {
+        margin-left: 10rpx;
+        color: #333333;
+        font-size: 26rpx;
+        font-weight: bolder;
+        // letter-spacing: 20rpx;
+      }
+    }
+    .title-year {
+      font-size: 22rpx;
+      color: #68e6fe;
+    }
+  }
+  .line {
+    width: 673rpx;
+    height: 1rpx;
+    margin-top: 14rpx;
+    border-top: solid 1rpx #333333;
+    opacity: 0.1;
+  }
+  .friend {
+    margin-top: 23rpx;
+    display: flex;
+    width: 593rpx;
+    height: 163rpx;
+    margin: 0 auto;
+    margin-top: 23rpx;
+    & div:last-child {
+      margin-right: 0;
+    }
+    .friend-item {
+      display: flex;
+      flex-direction: column;
+      margin-right: 39rpx;
+      .friend-avatar {
+        width: 120rpx;
+        height: 119rpx;
+        // background-color: #30d0ff;
+        box-shadow: 0px 0px 12prx 1rpx rgba(59, 130, 144, 0.19);
+        img {
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+        }
+      }
+      .friend-info {
+        color: #333333;
+        font-size: 16rpx;
+        margin-top: 25rpx;
+        .friend-name {
+          text-align: center;
+        }
+      }
+    }
+  }
 }
-
-.list-icon {
-  width: 40rpx;
-  height: 90rpx;
-  line-height: 90rpx;
-  color: #0faeff;
-  text-align: center;
-  font-family: texticons;
-  margin-right: 20rpx;
-}
-
-.list-text {
-  height: 90rpx;
-  line-height: 90rpx;
-  color: rgb(190, 65, 65);
-  flex: 1;
-  text-align: left;
-}
-
-.navigat-arrow {
-  height: 90rpx;
-  width: 40rpx;
-  line-height: 90rpx;
-  color: #555;
-  text-align: right;
-  font-family: texticons;
+.module4 {
+  width: 710rpx;
+  height: 294rpx;
+  box-shadow: 0px 0px 12px 1rpx rgba(59, 130, 144, 0.19);
+  padding: 26rpx 19rpx 27rpx 20rpx;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  background: url(http://192.168.31.193/202204/uni-miniapp-acBook/src/static/img/model4-bg.jpg)
+    no-repeat center/cover;
+  margin-bottom: 40rpx;
 }
 </style>
