@@ -4,10 +4,15 @@
     <div class="module1 module">
       <div class="info">
         <div class="avatar">
-          <img src="../../static/img/avatar.jpg" alt="头像" />
+          <img :src="userinfo.avatarUrl || DEFAULT_AVATAR" alt="头像" />
         </div>
         <div class="user-info">
-          <div class="user-name">PAC-MAN</div>
+          <div v-if="!hasLogin" @click="login" class="user-name">
+            点此登录
+          </div>
+          <div v-else class="user-name">
+            {{ userinfo.nickName || "PAC-MAN" }}
+          </div>
           <hr class="line" />
           <div class="user-mount">
             <div class="mount-icon"></div>
@@ -39,29 +44,52 @@
       </div>
       <hr class="line" />
       <div class="friend">
-        <div
-          v-for="(item, index) in friendList"
-          :key="index"
-          class="friend-item"
-        >
-          <div class="friend-avatar">
-            <img :src="item.avatar" alt="头像" />
+        <div class="friend-first">
+          <div
+            v-for="(item, index) in friendList.slice(0, 3)"
+            :key="index"
+            class="friend-item"
+          >
+            <div class="friend-avatar">
+              <img :src="item.avatar" alt="头像" />
+            </div>
+            <div class="friend-info">
+              <div class="friend-name">{{ item.name }}</div>
+            </div>
           </div>
-          <div class="friend-info">
-            <div class="friend-name">{{ item.name }}</div>
+        </div>
+        <div v-if="friendList.length > 3" class="friend-more">
+          <div class="more-avatar">
+            <div
+              v-for="(item, index) in friendList.slice(3, 6)"
+              :key="index"
+              class="friend-item"
+            >
+              <div class="friend-avatar">
+                <img :src="item.avatar" alt="头像" />
+              </div>
+            </div>
+          </div>
+          <div :class="['friend-info', friendList.length > 4 ? 'transX' : '']">
+            <div class="friend-name">……</div>
           </div>
         </div>
       </div>
     </div>
-    <div class="module4 module"></div>
-    <div class="module4 module"></div>
+    <div class="module4 others module">
+      <div class="tips">
+        CREATED BY AFISH , DESIGNED BY Lei
+      </div>
+    </div>
   </view>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
+      DEFAULT_AVATAR: "../../static/img/avatar.jpg",
       friendList: [
         {
           name: "我的名字七个字",
@@ -74,22 +102,29 @@ export default {
         {
           name: "我的名字七个字",
           avatar: "../../static/img/user3.jpg"
+        },
+        {
+          name: "我的名字七个字",
+          avatar: "../../static/img/user4.jpg"
         }
       ]
     };
   },
-  computed: {},
+  computed: {
+    ...mapGetters(["userinfo", "hasLogin"])
+  },
   mounted() {},
-  onShow() {},
+  onShow() {
+    console.log("--userinfo--", this.userinfo);
+    console.log("--hasLogin--", this.hasLogin);
+  },
   methods: {
-    toInvite() {
-      uni.navigateTo({
-        url: "/pages/invite/invite"
-      });
+    login() {
+      this.goto("/pages/login/login");
     },
-    goto() {
+    goto(url) {
       uni.navigateTo({
-        url: "../pwd/update-password"
+        url: url
       });
     }
   }
@@ -293,28 +328,81 @@ export default {
     height: 163rpx;
     margin: 0 auto;
     margin-top: 23rpx;
+    display: flex;
     & div:last-child {
       margin-right: 0;
     }
-    .friend-item {
+    .friend-first {
+      width: 80%;
+      display: flex;
+      .friend-item {
+        display: flex;
+        flex-direction: column;
+        margin-right: 39rpx;
+        .friend-avatar {
+          width: 120rpx;
+          height: 119rpx;
+          // background-color: #30d0ff;
+          box-shadow: 0px 0px 12prx 1rpx rgba(59, 130, 144, 0.19);
+          img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+          }
+        }
+        .friend-info {
+          color: #333333;
+          font-size: 16rpx;
+          margin-top: 25rpx;
+          .friend-name {
+            text-align: center;
+          }
+        }
+      }
+    }
+    .friend-more {
+      width: 20%;
       display: flex;
       flex-direction: column;
-      margin-right: 39rpx;
-      .friend-avatar {
-        width: 120rpx;
-        height: 119rpx;
-        // background-color: #30d0ff;
-        box-shadow: 0px 0px 12prx 1rpx rgba(59, 130, 144, 0.19);
-        img {
-          width: 100%;
-          height: 100%;
-          border-radius: 50%;
+      position: relative;
+      .more-avatar {
+        & div:first-child {
+          left: 0;
+          z-index: 9;
         }
+        & div:nth-child(2) {
+          left: 20rpx;
+          z-index: 8;
+        }
+        & div:nth-child(3) {
+          left: 40rpx;
+          z-index: 7;
+        }
+        .friend-item {
+          position: absolute;
+          .friend-avatar {
+            width: 120rpx;
+            height: 119rpx;
+            // background-color: #30d0ff;
+            box-shadow: 0px 0px 12prx 1rpx rgba(59, 130, 144, 0.19);
+            img {
+              width: 100%;
+              height: 100%;
+              border-radius: 50%;
+            }
+          }
+        }
+      }
+      .transX {
+        transform: translateX(20rpx);
       }
       .friend-info {
         color: #333333;
         font-size: 16rpx;
         margin-top: 25rpx;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
         .friend-name {
           text-align: center;
         }
@@ -332,5 +420,20 @@ export default {
   background: url(http://192.168.31.193/202204/uni-miniapp-acBook/src/static/img/model4-bg.jpg)
     no-repeat center/cover;
   margin-bottom: 40rpx;
+}
+.others {
+  position: relative;
+  .tips {
+    width: 100%;
+    font-size: 24rpx;
+    color: #333333;
+    text-align: center;
+    font-weight: bolder;
+    position: absolute;
+    bottom: -50px;
+    opacity: 0.2;
+    left: 50%;
+    transform: translateX(-50%);
+  }
 }
 </style>

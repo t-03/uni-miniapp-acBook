@@ -2,13 +2,13 @@
   <view class="content">
     <div class="center">
       <div class="avatar"></div>
-      <div class="tips">请问,我们可以了解一下你是谁吗？</div>
+      <div class="tips">请问,我们可以了解一下你的基本信息吗？</div>
     </div>
     <div class="button">
-      <div class="confirm btCenter">
+      <div class="confirm btCenter" @click="login">
         <span>确定</span>
       </div>
-      <div class="cancel btCenter">
+      <div class="cancel btCenter" @click="goBack">
         <span>取消</span>
       </div>
     </div>
@@ -22,8 +22,38 @@ export default {
     return {};
   },
   onLoad() {},
-  methods: {},
-  onReady() {}
+  onReady() {},
+  methods: {
+    login() {
+      let _this = this;
+      uni.getUserProfile({
+        desc: "获取您的头像和昵称",
+        success: res => {
+          _this.$store.commit("users/SET_USER_INFO", res.userInfo);
+          _this.$store.commit("users/SET_LOGIN", true);
+          _this.goBack();
+        },
+        fail: () => {
+          uni.showToast({
+            title: "您拒绝了授权，之后再来吧~",
+            icon: "none",
+            duration: 3500
+          });
+        }
+      });
+      // uni.login({
+      //   provider: "weixin",
+      //   success: function(loginRes) {
+      //     console.log(loginRes.code);
+      //   }
+      // });
+    },
+    goBack() {
+      wx.navigateBack({
+        delta: 1
+      });
+    }
+  }
 };
 </script>
 

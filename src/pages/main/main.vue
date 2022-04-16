@@ -9,7 +9,7 @@
     </view>
     <view v-if="!hasLogin" class="hello">
       <view class="title">
-        您好aaaaaaaaaaaaaaaaa，游客。
+        您好 游客。
       </view>
       <view class="ul" @click="showInfo">
         <view>这是 uni-app 带登录模板的示例App首页。</view>

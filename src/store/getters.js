@@ -4,7 +4,7 @@ const getters = {
   // 设备
   device: state => state.app.device,
   // 用户是否登录
-  login: state => state.users.login,
+  hasLogin: state => state.users.hasLogin,
   // 用户信息
   userinfo: state => state.users.userinfo,
   // 用户ID
